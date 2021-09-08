@@ -74,6 +74,7 @@ Once we know a little more about how to build a server inside a Virtual Machine 
 
 
 # References
+- https://www.youtube.com/watch?v=2w-2MX5QrQw 				[video]
 - https://githubmemory.com/repo/hanshazairi/42-born2beroot	[good]
 - https://github.com/HEADLIGHTER/Born2BeRoot-42				[good]
 - https://github.com/pgomez-a/born2beroot					[info]
