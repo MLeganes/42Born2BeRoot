@@ -2,37 +2,44 @@
 
 **Born2BeRoot** is made to allow us to learn more about the world of **virtualization**. Thanks to this project we will be able to configure a server hosted in a virtual machine. In this way, we will learn the benefits of using a virtual machine, although we will also see that its use is not always advisable.
 
-# Virtual Machine
-A virtual machine is a **software capable of installing an Operating System within itself, making the OS think that it is hosted on a real computer**. With virtual machines we can create virtual devices that will behave in the same way as physical devices, using their own CPU, memory, network interface and storage. This is possible because **the virtual machine is hosted on a physical device**, which is the one that provides the hardware resources to the VM. The software program that creates virtual machines is **the hypervisor**. The hypervisor is responsible for isolating the VM resources from the system hardware and making the necessary implementations so that the VM can use these resources.<br>
-The devices that provide the hardware resources are called **host machines or hosts**. The different virtual machines that can be assigned to a host are called **guests or guest machines**. The hypervisor uses a part of the host machine's CPU, storage, etc., and distributes them among the different VMs.<br>
-<br>
-There can be multiple virtual machines on the same host and each of these will be isolated from the rest of the system. Thanks to this, we can run different operating systems on our machine. For each virtual machine, we can run a different operating system distribution. Each of these operating systems will behave as if they were hosted on a physical device, so we will have the same experience when using an OS on a physical machine and on a virtual machine.
+# SELinux - Security-Enhanced Linux
+For CentOS
 
-## Virtual Machines works
-Virtualization allow us share a system with multiple virtual environments. The hypervisor manages the hardware system and separate the physical resources from the virtual environments. **The resources are managed followitn the needs, from the host to the guests.** When an user from a VM do a task that requires additional resources from the physical environment, the hypervisor manages the request so that the guest OS could access the resources of the physical environment.<br>
-Once we know how they work, it is a good idea to see all the advantages we get from using virtual machines:
-<ul>
- <li>Different guest machines hosted on our computer <b>can run different operating systems</b>, so we will have different OS working on the same machine.</li>
-   <li>They provide an environment in which <b>to safely test unstable programs</b> to see if they will affect the system or not.</li>
-   <li>We get <b>better use of shared resources.</b></li>
-   <li>We <b>reduce costs</b> by reducing physical architecture.</li>
-   <li>They are <b>easy to implement</b> because they provide mechanisms to clone a virtual machine to another physical device.</li>
-</ul>
+https://debian-handbook.info/browse/stable/sect.selinux.html
 
-## VM in ubuntu
-Download the deb Packege Oracle VM virtualBox and install it with
+# AppArmor
+For debian. Running at the  start.
 
-	sudo dpkg -i /absolute/path/to/deb/file
-	sudo apt-get install -f
+### Commands
+- systemctl status apparmor
+- systemctl enable apparmor
+- systemctl disable apparmor
+  
+- apt install apparmor-utils
+  
+- aa-status or equal command: apparmor_status
+- aa-logprof
+
+# Debian vs CentOS
+Debian is easy and more familiar.
+
+# SSH
+Port 4242. No root connection.
+
+
+
 
 # LVM
-**LVM (Logical Volume Manager)** is an **abstraction layer between a storage device and a file system**. We get many advantages from using LVM, but the main advantage is that we have much more flexibility when it comes to managing partitions. Suppose we create four partitions on our storage disk. If for any reason we need to expand the storage of the first three partitions, we will not be able to because there is no space available next to them. In case we want to extend the last partition, we will always have the limit imposed by the disk. In other words, we will not be able to manipulate partitions in a friendly way. Thanks to LVM, all these problems are solved.<br>
+**LVM (Logical Volume Manager)** is an abstraction layer between a storage device and a file system. We get many advantages from using LVM, but the main advantage is that we have much more flexibility when it comes to managing partitions. Suppose we create four partitions on our storage disk. If for any reason we need to expand the storage of the first three partitions, we will not be able to because there is no space available next to them. In case we want to extend the last partition, we will always have the limit imposed by the disk. In other words, we will not be able to manipulate partitions in a friendly way. Thanks to LVM, all these problems are solved.<br>
 By using LVM, **we can expand the storage of any partition** (now known as a logical volume) whenever we want without worrying about the contiguous space available on each logical volume. We can do this with available storage located on different physical disks (which we cannot do with traditional partitions). We can also move different logical volumes between physical devices. Of course, **services and processes will work the same way they always have**. But to understand all this, we have to know:
 <ul>
  <li><b>Physical Volume (PV):</b> physical storage device. It can be a hard disk, an SD card, a floppy disk, etc. This device provides us with storage available to use.</li>
    <li><b>Volume Group (VG):</b> to use the space provided by a PV, it must be allocated in a volume group. It is like a virtual storage disk that will be used by logical volumes. VGs can grow over time by adding new VPs.</li>
    <li><b>Logical volume (LV):</b> these devices will be the ones we will use to create file systems, swaps, virtual machines, etc. If the VG is the storage disk, the LV are the partitions that are made on this disk.</li>
 </ul>
+
+## Commands
+	- lsblk
 
 # AppArmor
 AppArmor provides **Mandatory Access Control (MAC) security**. In fact, **AppAmor allows the system administrator to restrict the actions that processes can perform**. For example, if an installed application can take photos by accessing the camera application, but the administrator denies this privilege, the application will not be able to access the camera application. If a vulnerability occurs (some of the restricted tasks are performed), AppArmor blocks the application so that the damage does not spread to the rest of the system.<br>
@@ -64,19 +71,14 @@ Once we know a little more about how to build a server inside a Virtual Machine 
 - **Cron:** Linux task manager that allows us to execute commands at a certain time. We can automate some tasks just by telling cron what command we want to run at a specific time. For example, if we want to restart our server every day at 4:00 am, instead of having to wake up at that time, cron will do it for us.
 - **Wall:** command used by the root user to send a message to all users currently connected to the server. If the system administrator wants to alert about a major server change that could cause users to log out, the root user could alert them with wall. 
 
-# Installin Debian in VirtualBox
-
-## Memory
-- 4G
-
-## Hard Disk
-- Virtual hard disk -> VDI VirtualBox disk Imagen -> Dynimically allocation
-
-
 # References
-- https://www.youtube.com/watch?v=2w-2MX5QrQw 				[video]
+- https://www.youtube.com/watch?v=2w-2MX5QrQw 				[install debian]
+  
 - https://githubmemory.com/repo/hanshazairi/42-born2beroot	[good]
+
 - https://github.com/HEADLIGHTER/Born2BeRoot-42				[good]
+
 - https://github.com/pgomez-a/born2beroot					[info]
-- https://github.com/HEADLIGHTER/Born2BeRoot-42				[]
-- 
+
+- https://baigal.medium.com/born2beroot-e6e26dfb50ac		[super]
+  
