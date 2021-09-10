@@ -1,70 +1,124 @@
 # 42Born2beRoot
 
-**Born2BeRoot** is made to allow us to learn more about the world of **virtualization**. Thanks to this project we will be able to configure a server hosted in a virtual machine. In this way, we will learn the benefits of using a virtual machine, although we will also see that its use is not always advisable.
+**Born2BeRoot** is about administration a linux system on a virtual machine.
 
-# SELinux - Security-Enhanced Linux
-For CentOS
+# Debian vs CentOS
+Debian is easy and more familiar. CentOS no more mantenance.
+
+# SELinux (Security-Enhanced Linux)
+For CentOS.
 
 https://debian-handbook.info/browse/stable/sect.selinux.html
 
 # AppArmor
 For debian. Running at the  start.
-
-### Commands
-- systemctl status apparmor
-- systemctl enable apparmor
-- systemctl disable apparmor
-  
-- apt install apparmor-utils
-  
-- aa-status or equal command: apparmor_status
-- aa-logprof
-
-# Debian vs CentOS
-Debian is easy and more familiar.
-
-# SSH
-Port 4242. No root connection.
-
-
-
-
-# LVM
-**LVM (Logical Volume Manager)** is an abstraction layer between a storage device and a file system. We get many advantages from using LVM, but the main advantage is that we have much more flexibility when it comes to managing partitions. Suppose we create four partitions on our storage disk. If for any reason we need to expand the storage of the first three partitions, we will not be able to because there is no space available next to them. In case we want to extend the last partition, we will always have the limit imposed by the disk. In other words, we will not be able to manipulate partitions in a friendly way. Thanks to LVM, all these problems are solved.<br>
-By using LVM, **we can expand the storage of any partition** (now known as a logical volume) whenever we want without worrying about the contiguous space available on each logical volume. We can do this with available storage located on different physical disks (which we cannot do with traditional partitions). We can also move different logical volumes between physical devices. Of course, **services and processes will work the same way they always have**. But to understand all this, we have to know:
-<ul>
- <li><b>Physical Volume (PV):</b> physical storage device. It can be a hard disk, an SD card, a floppy disk, etc. This device provides us with storage available to use.</li>
-   <li><b>Volume Group (VG):</b> to use the space provided by a PV, it must be allocated in a volume group. It is like a virtual storage disk that will be used by logical volumes. VGs can grow over time by adding new VPs.</li>
-   <li><b>Logical volume (LV):</b> these devices will be the ones we will use to create file systems, swaps, virtual machines, etc. If the VG is the storage disk, the LV are the partitions that are made on this disk.</li>
-</ul>
-
-## Commands
-	- lsblk
-
-# AppArmor
 AppArmor provides **Mandatory Access Control (MAC) security**. In fact, **AppAmor allows the system administrator to restrict the actions that processes can perform**. For example, if an installed application can take photos by accessing the camera application, but the administrator denies this privilege, the application will not be able to access the camera application. If a vulnerability occurs (some of the restricted tasks are performed), AppArmor blocks the application so that the damage does not spread to the rest of the system.<br>
-In AppArmor, **processes are restricted by profiles**. Profiles can work in complain-mode and in enforce-mode. In enforce mode, AppArmor prohibits applications from performing restricted tasks. In complain-mode, AppArmor allows applications to do these tasks, but creates a registry entry to display the complaint.
+
+https://debian-handbook.info/browse/stable/sect.apparmor.html
+https://wiki.debian.org/AppArmor/HowToUse
+
+	systemctl status apparmor
+	systemctl enable apparmor
+	systemctl disable apparmor
+	
+	apt install apparmor-utils
+	
+	aa-status 
+	apparmor_status (equal to aa-status)
+	aa-logprof
+
 
 # Apt vs Aptitute
-In Debian-based OS distributions, **the default package manager we can use is dpkg**. This tool allows us to install, remove and manage programs on our operating system. However, in most cases, these programs come with a list of dependencies that must be installed for the main program to function properly. One option is to manually install these dependencies. However, **APT (Advanced Package Tool)**, which is a tool that uses dpkg, **can be used to install all the necessary dependencies when installing a program**. So now we can install a useful program with a single command.<br>
-APT can work with different back-ends and fron-ends to make use of its services. One of them is **apt-get**, which **allows us to install and remove packages**. Along with apt-get, there are also many tools like apt-cache to manage programs. In this case, **apt-get and apt-cache are used by apt**. Thanks to apt we can install .deb programs easily and without worrying about dependencies. But in case we want to use a graphical interface, we will have to use aptitude. **Aptitude also does better control of dependencies**, allowing the user to choose between different dependencies when installing a program.
+In Debian-based OS distributions, **the default package manager we can use is dpkg**. This tool allows us to install, remove and manage programs on our operating system. However, in most cases, these programs come with a list of dependencies that must be installed for the main program to function properly. One option is to manually install these dependencies. 
 
-# SSH
-SSH or **Secure Shell** is a **remote administration protocol that allows users to control and modify their servers** over the Internet thanks to an authentication mechanism. Provides a mechanism to authenticate a user remotely, transfer data from the client to the host, and return a response to the request made by the client.<br>
-SSH was created as an alternative to Telnet, which does not encrypt the information that is sent. **SSH uses encryption techniques** to ensure that all client-to-host and host-to-client communications are done in encrypted form. One of the advantages of SSH is that a user using Linux or MacOS can use SSH on their server to communicate with it remotely through their computer's terminal. Once authenticated, that user will be able to use the terminal to work on the server.<br><br>
-The command used to connect to a server with ssh is:
+**APT (Advanced Package Tool)**, which is a tool that uses dpkg, **can be used to install all the necessary dependencies when installing a program**. So now we can install a useful program with a single command.
+APT can work with different back-ends and fron-ends to make use of its services. One of them is **apt-get**, which **allows us to install and remove packages**. Along with apt-get, there are also many tools like apt-cache to manage programs. In this case, **apt-get and apt-cache are used by apt**. Thanks to apt we can install .deb programs easily and without worrying about dependencies. 
 
-    ssh {username}@{IP_host} -p {port}
-    
-There are three different techniques that SSH uses to encrypt:
-<ul>
- <li><b>Symmetric encryption:</b> a method that uses the same secret key for both encryption and decryption of a message, for both the client and the host. Anyone who knows the password can access the message that has been transmitted.</li>
- <li><b>Asymmetric encryption:</b> uses two separate keys for encryption and decryption. These are known as the public key and the private key. Together, they form the public-private key pair.</li>
- <li><b>Hashing:</b> another form of cryptography used by SSH. Hash functions are made in a way that they don't need to be decrypted. If a client has the correct input, they can create a cryptographic hash and SSH will check if both hashes are the same.</li>
-</ul>
+But in case we want to use a graphical interface, we will have to use aptitude. **Aptitude also does better control of dependencies**, allowing the user to choose between different dependencies when installing a program.
 
-## Implement UFW with SSH
-**UFW (Uncomplicated Firewall)** is a software application responsible for ensuring that the system administrator can **manage iptables in a simple way**. Since it is very difficult to work with iptables, UFW provides us with an interface to modify the firewall of our device **(netfilter)** without compromising security. Once we have UFW installed, we can choose which ports we want to allow connections, and which ports we want to close. This will also be very useful with SSH, greatly improving all security related to communications between devices.
+
+# LVM (Logical Volume Manager)
+https://wiki.debian.org/LVM
+
+For the installation and partitions:
+https://www.youtube.com/watch?v=2w-2MX5QrQw 	
+
+https://www.systutorials.com/docs/linux/man/8-lvrename/
+	 lvrename - Rename a logical volume
+
+### Commands
+	lsblk
+
+# SUDO
+	apt-get install sudo
+
+To add an user in the sudo group
+
+	sudo usermod -aG sudo <username>
+
+To check if it added. (groups in the system: /etc/group)
+
+	getent group <username>
+
+To see the groups from an user
+
+	groups
+	groups <username>
+
+# SU
+Change to another user or super user
+	
+	su <username>
+
+
+# ID
+Print info about the user
+	id <username>
+	id -nG <username>
+
+# SSH (Secure Shell) and UFW (Uncomplicated Firewall)
+
+	apt-get install openssh-server
+
+Config the ssh-server-file sshd_config, add the port 4242 and disable ssh login as root
+
+	/etc/ssh/sshd_config
+	Add		-> Port 4242
+	Remove 	-> #PermitRootLogin prohibit-password
+	Add		-> PermitRootLogin no
+
+UFW
+
+	apt-get install ufw
+	ufw allow 4242
+	ufw status
+	ufw enable
+
+
+# Groups user42 and sudo
+
+	groupadd user42
+	sudo usermod -aG user42 amorcill
+		-a -> add
+		-G -> group
+
+sudo group is by default in the system. It is done before.
+
+
+# Another commands
+
+	ip address
+	
+Check if the package is really installed
+
+	 dpkg -l | grep ssh
+
+Check for the status of the service or restart
+
+	systemctl status ssh
+	
+	service ssh restart
+
 
 # cron & wall
 Once we know a little more about how to build a server inside a Virtual Machine (remember that you also have to look in other pages apart from this README), we will see two commands that will be very helpful in case of being system administrators. These commands are:
@@ -74,7 +128,7 @@ Once we know a little more about how to build a server inside a Virtual Machine 
 # References
 - https://www.youtube.com/watch?v=2w-2MX5QrQw 				[install debian]
   
-- https://githubmemory.com/repo/hanshazairi/42-born2beroot	[good]
+- https://githubmemory.com/repo/hanshazairi/42-born2beroot	[reading]
 
 - https://github.com/HEADLIGHTER/Born2BeRoot-42				[good]
 
