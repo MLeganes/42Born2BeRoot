@@ -50,6 +50,7 @@ https://www.youtube.com/watch?v=2w-2MX5QrQw
 	lsblk
 
 # SUDO
+
 	apt-get install sudo
 
 To add an user in the sudo group
@@ -169,36 +170,52 @@ should look like the below:
 		-a -> add
 		-G -> group
 
-# SUDO Stricts Rules
-	TODAY 13/9
+# Sudo Stricts Rules
+
+## 	/etc/sudoers
+Info in the web https://www.tecmint.com/sudoers-configurations-for-setting-sudo-in-linux/
+
+Authentication using sudo has to be limited to 3 attempts in the event of an incorrect password
+
+	Defaults        passwd_tries=3
+
+A custom message of your choice has to be displayed if an error due to a wrong password occurs when using sudo.
+
+	#Defaults       badpass_message=="Password is wrong, remember it, idiot!!!!"
+	Defaults        insults
+
+Each action using sudo has to be archived, both inputs and outputs (Log sudo commands). The log file has to be saved in the/var/log/sudo/folder. 
+The default I/O log directory is /var/log/sudo-io, and if there is a session sequence number, it is stored in this directory.
+
+	Defaults        logfile="/var/log/sudo/sudo-io"
+	Defaults        log_input, log_output
+	
+The TTY mode has to be enabled for security reasons
+
+	Defaults        requiretty
+
+For security reasons too, the paths that can be used by sudo must be restricted. 
+Example:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+	Defaults   secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
 
 
 
-
+# Monitoring.sh
+Script called monitoring.sh. It must be devel-oped inbash.At server startup, the script will display some information (listed below) on all ter-minals every 10 minutes (take a look atwall). The banner is optional. No error mustbe visible.Your script must always be able to display the following information:•The architecture of your operating system and its kernel version.•The number of physical processors.•The number of virtual processors.•The current available RAM on your server and its utilization rate as a percentage.•The current available memory on your server and its utilization rate as a percentage.•The current utilization rate of your processors as a percentage.•The date and time of the last reboot.•Whether LVM is active or not.•The number of active connections.•The number of users using the server.•The IPv4 address of your server and its MAC (Media Access Control) address.•The number of commands executed with thesudoprogra
 
 
 
 
 # More commands
 
-Print info about the user
-
-	id <username>
+	id <username>			[Print info about the user]
 	id -nG <username>
-
-Ip address
-
-	ip address
+	ip address				[Ip address]	
+	dpkg -l | grep ssh		[Check if the package is really installed]
+	systemctl status ssh	[Check for the status of the service or restart]
+	service ssh restart		[Check for the status of the service or restart, equal]
 	
-Check if the package is really installed
-
-	 dpkg -l | grep ssh
-
-Check for the status of the service or restart
-
-	systemctl status ssh	
-	service ssh restart
-
 
 # cron & wall
 Once we know a little more about how to build a server inside a Virtual Machine (remember that you also have to look in other pages apart from this README), we will see two commands that will be very helpful in case of being system administrators. These commands are:
