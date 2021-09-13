@@ -11,7 +11,7 @@ For CentOS.
 https://debian-handbook.info/browse/stable/sect.selinux.html
 
 # AppArmor
-For debian. Running at the  start.
+For debian.
 AppArmor provides **Mandatory Access Control (MAC) security**. In fact, **AppAmor allows the system administrator to restrict the actions that processes can perform**. For example, if an installed application can take photos by accessing the camera application, but the administrator denies this privilege, the application will not be able to access the camera application. If a vulnerability occurs (some of the restricted tasks are performed), AppArmor blocks the application so that the damage does not spread to the rest of the system.<br>
 
 https://debian-handbook.info/browse/stable/sect.apparmor.html
@@ -29,12 +29,16 @@ https://wiki.debian.org/AppArmor/HowToUse
 
 
 # Apt vs Aptitute
-In Debian-based OS distributions, **the default package manager we can use is dpkg**. This tool allows us to install, remove and manage programs on our operating system. However, in most cases, these programs come with a list of dependencies that must be installed for the main program to function properly. One option is to manually install these dependencies. 
+In Debian-based OS distributions, the default package manager we can use is **dpkg**. This tool allows us to install, remove and manage programs on our operating system. However, in most cases, these programs come with a list of dependencies that must be installed for the main program to function properly.
 
-**APT (Advanced Package Tool)**, which is a tool that uses dpkg, **can be used to install all the necessary dependencies when installing a program**. So now we can install a useful program with a single command.
-APT can work with different back-ends and fron-ends to make use of its services. One of them is **apt-get**, which **allows us to install and remove packages**. Along with apt-get, there are also many tools like apt-cache to manage programs. In this case, **apt-get and apt-cache are used by apt**. Thanks to apt we can install .deb programs easily and without worrying about dependencies. 
+**APT (Advanced Package Tool)**, which is a tool that uses dpkg, can be used to install all the necessary dependencies when installing a program.  
 
-But in case we want to use a graphical interface, we will have to use aptitude. **Aptitude also does better control of dependencies**, allowing the user to choose between different dependencies when installing a program.
+**Aptitude** a graphical interface packege tool.
+ 
+https://wiki.debian.org/Aptitude
+
+	apt-get install aptitude
+	aptitude
 
 
 # LVM (Logical Volume Manager)
@@ -43,10 +47,6 @@ https://wiki.debian.org/LVM
 For the installation and partitions:
 https://www.youtube.com/watch?v=2w-2MX5QrQw 	
 
-https://www.systutorials.com/docs/linux/man/8-lvrename/
-	 lvrename - Rename a logical volume
-
-### Commands
 	lsblk
 
 # SUDO
@@ -56,7 +56,7 @@ To add an user in the sudo group
 
 	sudo usermod -aG sudo <username>
 
-To check if it added. (groups in the system: /etc/group)
+To check if it added correctly. (file groups in the system: /etc/group)
 
 	getent group <username>
 
@@ -66,15 +66,13 @@ To see the groups from an user
 	groups <username>
 
 # SU
-Change to another user or super user
+Change to another user or super-user
 	
 	su <username>
+	su
 
 
-# ID
-Print info about the user
-	id <username>
-	id -nG <username>
+
 
 # SSH (Secure Shell) and UFW (Uncomplicated Firewall)
 
@@ -95,6 +93,75 @@ UFW
 	ufw enable
 
 
+
+
+
+sudo group is by default in the system. It is done before.
+
+
+# Password Policy
+
+## /etc/login.defs
+
+	# Password has to expire every 30 days
+	PASS_MAX_DAYS   30
+
+	# The minimum number of days allowed before the modification of a password willbe set to 2
+	PASS_MIN_DAYS   2
+
+	# The user has to receive a warning message 7 days before their password expires
+	PASS_WARN_AGE   7
+
+## /etc/pam.d/common-password
+**PAM** module to check password strength
+Your password must be at least 10 characters long. It must contain an uppercaseletter and a number. It must not contain more than 3 consecutive identical characters. The password must not include the name of the user. 
+
+The following rule does not apply to the root password: The password must have at least 7 characters that are not part of the former password.
+Of course, your root password has to comply with this polic
+
+	apt-get update -y
+	apt-get install -y libpam-pwquality
+
+Note: -y flag means to assume yes and silently install, without asking you questions in most cases. 
+
+File to edit /etc/pam.d/common-password and add.
+	
+	# here are the per-package modules (the "Primary" block)
+	password        requisite                       pam_pwquality.so retry=3
+	
+	# minimum password length
+	minlen = 8
+	
+	# minimum uppercase character
+	ucredit = -1
+
+	#minimum digit character
+	dcredit = -1
+
+	#maximum number of allowed consecutive same characters
+	maxrepeat = 3
+	
+	#reject the password if it contains <username> in some form
+	reject_username
+
+	#number of changes required in the new password from the old password to 7:
+	difok=7
+
+	#implement the same policy on root
+	enforce_for_root
+
+
+should look like the below:
+
+	password	requisite	pam_pwquality.so retry=3 minlen=10 ucredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root
+
+
+# Creating New User
+
+	sudo adduser <<username>>
+	getent passwd <username>
+	chage -l <username>
+
 # Groups user42 and sudo
 
 	groupadd user42
@@ -102,10 +169,24 @@ UFW
 		-a -> add
 		-G -> group
 
-sudo group is by default in the system. It is done before.
+# SUDO Stricts Rules
+	TODAY 13/9
 
 
-# Another commands
+
+
+
+
+
+
+# More commands
+
+Print info about the user
+
+	id <username>
+	id -nG <username>
+
+Ip address
 
 	ip address
 	
@@ -115,8 +196,7 @@ Check if the package is really installed
 
 Check for the status of the service or restart
 
-	systemctl status ssh
-	
+	systemctl status ssh	
 	service ssh restart
 
 
@@ -128,11 +208,11 @@ Once we know a little more about how to build a server inside a Virtual Machine 
 # References
 - https://www.youtube.com/watch?v=2w-2MX5QrQw 				[install debian]
   
-- https://githubmemory.com/repo/hanshazairi/42-born2beroot	[reading]
+- https://githubmemory.com/repo/hanshazairi/42-born2beroot	[reading OK]
+- https://baigal.medium.com/born2beroot-e6e26dfb50ac
 
 - https://github.com/HEADLIGHTER/Born2BeRoot-42				[good]
 
 - https://github.com/pgomez-a/born2beroot					[info]
 
 - https://baigal.medium.com/born2beroot-e6e26dfb50ac		[super]
-  
