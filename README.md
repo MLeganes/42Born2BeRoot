@@ -1,12 +1,13 @@
 # 42Born2beRoot
 
-**Born2BeRoot** is about administration a linux system on a virtual machine.
+**Born2BeRoot** is a project to administrate a linux system on a virtual machine.
 
 # Debian vs CentOS
 Debian is easy and more familiar. CentOS no more mantenance.
 
+
 # SELinux (Security-Enhanced Linux)
-For CentOS.
+For CentOS. Like AppArmor.
 
 https://debian-handbook.info/browse/stable/sect.selinux.html
 
@@ -49,7 +50,7 @@ https://www.youtube.com/watch?v=2w-2MX5QrQw
 
 	lsblk
 
-# SUDO
+# Sudo
 
 	apt-get install sudo
 
@@ -66,36 +67,29 @@ To see the groups from an user
 	groups
 	groups <username>
 
-# SU
+# Su
 Change to another user or super-user
 	
 	su <username>
 	su
 
-
-
-
 # SSH (Secure Shell) and UFW (Uncomplicated Firewall)
 
 	apt-get install openssh-server
 
+## /etc/ssh/sshd_config
 Config the ssh-server-file sshd_config, add the port 4242 and disable ssh login as root
 
-	/etc/ssh/sshd_config
 	Add		-> Port 4242
 	Remove 	-> #PermitRootLogin prohibit-password
 	Add		-> PermitRootLogin no
 
-UFW
+## UFW
 
 	apt-get install ufw
 	ufw allow 4242
 	ufw status
 	ufw enable
-
-
-
-
 
 sudo group is by default in the system. It is done before.
 
@@ -202,7 +196,36 @@ Example:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
 
 # Monitoring.sh
-Script called monitoring.sh. It must be devel-oped inbash.At server startup, the script will display some information (listed below) on all ter-minals every 10 minutes (take a look atwall). The banner is optional. No error mustbe visible.Your script must always be able to display the following information:•The architecture of your operating system and its kernel version.•The number of physical processors.•The number of virtual processors.•The current available RAM on your server and its utilization rate as a percentage.•The current available memory on your server and its utilization rate as a percentage.•The current utilization rate of your processors as a percentage.•The date and time of the last reboot.•Whether LVM is active or not.•The number of active connections.•The number of users using the server.•The IPv4 address of your server and its MAC (Media Access Control) address.•The number of commands executed with thesudoprogra
+At server startup, the script will display some information on all terminals every 10 minutes. Schedule the task with cron and send masage with wall.
+
+	# The architecture of your operating system and its kernel version.
+		arch
+		uname -r
+
+
+	# The number of physical processors.
+		lscpu 
+
+	# The number of virtual processors.
+		
+
+•The current available RAM on your server and its utilization rate as a percentage.
+
+•The current available memory on your server and its utilization rate as a percentage.
+
+•The current utilization rate of your processors as a percentage.
+
+•The date and time of the last reboot.
+
+•Whether LVM is active or not.
+
+•The number of active connections.
+
+•The number of users using the server.
+
+•The IPv4 address of your server and its MAC (Media Access Control) address.
+
+•The number of commands executed with thesudoprogra
 
 
 
