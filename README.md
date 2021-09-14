@@ -256,3 +256,23 @@ Once we know a little more about how to build a server inside a Virtual Machine 
 - https://github.com/pgomez-a/born2beroot					[info]
 
 - https://baigal.medium.com/born2beroot-e6e26dfb50ac		[super]
+
+
+
+# Tom script
+
+#!/bin/bash
+wall << FILE
+#Architecture: $(uname -a)
+#CPU physical: $(nproc)
+#vCPU: $(cat /proc/cpuinfo | grep processor | wc -l)
+$(free | grep Mem | awk '{printf"#Memory Usage: %.0f/%.0fMB (%.2f%%)\n", $3 / 1000, $2 / 1000, $3/$2 * 100.0}')
+$(df | grep dev/sda1 | awk '{printf"#Disk Usage: %.0f/%.0fMB (%.2f%%)\n", $3 / 1000, $2 / 1000, $3/$2 * 100}')
+$(mpstat | grep -A 5 "%idle" | tail -n 1 | awk '{printf"#CPU Load: %.2f%%\n", 100 - $13}')
+#Last boot: $(who -b | cut -d' ' -f13) $(who -b | cut -d' ' -f14)
+#LVM use: $(lsblk | grep lvm | wc -l | awk '{print ($0 > 0)?"yes":"no"}')
+#Connexions TCP: $(ss -s | grep estab | awk '{print $4}') ESTABLISHED
+#User Log: $(who | cut -d " " -f 1 | sort -u | wc -l)
+#Network: $(ip -4 addr | grep global -m 1 | awk '{print $2}') ($(ip addr | grep link/ether -m 1 | awk '{print $2}'))
+#Sudo: $(cat /var/log/sudo/sudo.log | awk 'NR == 1 || NR % 2 == 1' | wc -l) cmd
+FILE
