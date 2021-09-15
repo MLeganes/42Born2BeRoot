@@ -13,7 +13,7 @@ https://debian-handbook.info/browse/stable/sect.selinux.html
 
 # AppArmor
 For debian.
-AppArmor provides **Mandatory Access Control (MAC) security**. In fact, **AppAmor allows the system administrator to restrict the actions that processes can perform**. For example, if an installed application can take photos by accessing the camera application, but the administrator denies this privilege, the application will not be able to access the camera application. If a vulnerability occurs (some of the restricted tasks are performed), AppArmor blocks the application so that the damage does not spread to the rest of the system.<br>
+AppArmor provides **Mandatory Access Control (MAC) security**. In fact, **AppAmor allows the system administrator to restrict the actions that processes can perform**. For example, if an installed application can take photos by accessing the camera application, but the administrator denies this privilege, the application will not be able to access the camera application.j  If a vulnerability occurs (some of the restricted tasks are performed), AppArmor blocks the application  so that the damage does not spread to the rest of the system.<br>
 
 https://debian-handbook.info/browse/stable/sect.apparmor.html
 https://wiki.debian.org/AppArmor/HowToUse
@@ -57,6 +57,7 @@ https://www.youtube.com/watch?v=2w-2MX5QrQw
 To add an user in the sudo group
 
 	sudo usermod -aG sudo <username>
+	sudo adduser <username> <groupname>
 
 To check if it added correctly. (file groups in the system: /etc/group)
 
@@ -236,6 +237,7 @@ At server startup, the script will display some information on all terminals eve
 	id -nG <username>
 	ip address				[Ip address]	
 	dpkg -l | grep ssh		[Check if the package is really installed]
+	
 	systemctl status ssh	[Check for the status of the service or restart]
 	service ssh restart		[Check for the status of the service or restart, equal]
 	
