@@ -56,6 +56,7 @@ https://www.youtube.com/watch?v=2w-2MX5QrQw
 To add an user in the sudo group
 
 	sudo usermod -aG sudo <username>
+	or
 	sudo adduser <username> <groupname>
 
 To check if it added correctly. (file groups in the system: /etc/group)
@@ -146,7 +147,7 @@ File to edit /etc/pam.d/common-password and add.
 	enforce_for_root
 
 
-should look like the below:
+**should look like the below:**
 
 	password	requisite	pam_pwquality.so retry=3 minlen=10 ucredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root
 
@@ -166,7 +167,7 @@ should look like the below:
 
 # Sudo Stricts Rules
 
-## 	/etc/sudoers
+## 	#visudo to edit **/etc/sudoers**
 Info in the web https://www.tecmint.com/sudoers-configurations-for-setting-sudo-in-linux/
 
 Authentication using sudo has to be limited to 3 attempts in the event of an incorrect password
@@ -175,7 +176,7 @@ Authentication using sudo has to be limited to 3 attempts in the event of an inc
 
 A custom message of your choice has to be displayed if an error due to a wrong password occurs when using sudo.
 
-	#Defaults       badpass_message=="Password is wrong, try it again!"
+	#Defaults       badpass_message="Password is wrong, try it again!"
 	Defaults        insults
 
 Each action using sudo has to be archived, both inputs and outputs (Log sudo commands). The log file has to be saved in the/var/log/sudo/folder. 
@@ -192,6 +193,47 @@ For security reasons too, the paths that can be used by sudo must be restricted.
 Example:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
 	Defaults   secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+
+**should look like the below:**\
+
+	#
+	# This file MUST be edited with the 'visudo' command as root.
+	#
+	# Please consider adding local content in /etc/sudoers.d/ instead of
+	# directly modifying this file.
+	#
+	# See the man page for details on how to write a sudoers file.
+	#
+	Defaults        env_reset
+	Defaults        mail_badpass
+	Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+
+	Defaults        passwd_tries=3
+	Defaults        requiretty
+	#Defaults       badpass_message="Password is wrong, remember it, idiot!!!!"
+	Defaults        insults
+	Defaults        logfile="/var/log/sudo/sudo-io"
+	Defaults        log_input, log_output
+	Defaults        requiretty
+
+	# Sudo log file, EXTRA.
+	Defaults  log_host, log_year, logfile="/var/log/sudo.log"
+
+	# Host alias specification
+
+	# User alias specification
+
+	# Cmnd alias specification
+
+	# User privilege specification
+	root    ALL=(ALL:ALL) ALL
+
+	# Allow members of group sudo to execute any command
+	%sudo   ALL=(ALL:ALL) ALL
+
+	# See sudoers(5) for more information on "@include" directives:
+
+	@includedir /etc/sudoers.d
 
 
 # Monitoring.sh
@@ -217,10 +259,12 @@ At server startup, the script will display some information on all terminals eve
 	dpkg -l | grep ssh		[Check if the package is really installed]
 	
 	systemctl status ssh	[Check for the status of the service or restart]
+	
+	service sudo restart
 	service ssh restart		[Check for the status of the service or restart, equal]
 	
 
-# cron & wall
+# Cron and wall
 Once we know a little more about how to build a server inside a Virtual Machine (remember that you also have to look in other pages apart from this README), we will see two commands that will be very helpful in case of being system administrators. These commands are:
 - **Cron:** Linux task manager that allows us to execute commands at a certain time. We can automate some tasks just by telling cron what command we want to run at a specific time. For example, if we want to restart our server every day at 4:00 am, instead of having to wake up at that time, cron will do it for us.
 - **Wall:** command used by the root user to send a message to all users currently connected to the server. If the system administrator wants to alert about a major server change that could cause users to log out, the root user could alert them with wall. 
