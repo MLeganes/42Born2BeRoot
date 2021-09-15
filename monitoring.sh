@@ -1,33 +1,30 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    monitoring.sh                                      :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: x250 <x250@student.42.fr>                  +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/09/14 16:01:07 by amorcill          #+#    #+#              #
-#    Updated: 2021/09/15 13:23:19 by x250             ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 #!/bin/bash
 cpuphysical=$(lscpu | grep Core\(s\) | awk '{print $4}')
-memusage=$(free -m | sed -n 2p | awk '{print $3}')
-memtotal=$()
-mempercen=$()
-wall << FILE
+mem=$(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)", $3,$2,$3*100/$2 }')
+#memusage=$(free -m | awk '$1 == "Mem:" {print $3}')
+#memtotal=$(free -m | awk '$1 == "Mem:" {print $2}')
+#mempercen=$(free | awk '$1 == "Mem:" {printf("%.3f"), $3/$2*100}')
+disk=$(df -h --total | awk '$1 == "total" {printf" %d/%dGB (%s)", $3,$2,$5}')
+cpuload=$(mpstat | grep all | awk '{printf"%s%%", 100-$13}')
+lastboot=$(	who -b | awk '{printf"%s %s", $3,$4}')
+lvm=$(lsblk | grep lvm | wc -l | awk '{print ($0 > 0)?"yes":"no"}')
+nettcp=$(ss -s | grep estab | awk '{printf"%d ESTABLISHED",$4}')
+userlog=$(who | wc -l)
+mac=$(ip addr | grep link/ether | awk '{printf" (%s) ",$2}')
+sudo=$(cat /var/log/sudo/sudo.log | awk 'NR == 1 || NR % 2 == 1' | wc -l)
+# +System Architecture: $(arch)
+# +Kernel Version: $(uname -r)
+wall "
 #Architecture: $(uname -a)
-# System Architecture: $(arch)
-# Kernel Version: $(uname -r)
 #CPU physical: $cpuphysical
 #vCPU: $(nproc)
-#Memory Usage:$(memusage)/$(memtotal) ($(mempercent))
-#Disk Usage:
-#CPU load:
-#Last boot:
-#LVM use:
-#Connection TCP:
-#User log:
-#Network: IP
-#Sudo:
-FILE
+#Memory Usage: $mem
+#Disk Usage: $disk
+#CPU load: $cpuload
+#Last boot: $lastboot
+#LVM use: $lvm
+#Connection TCP: $nettcp
+#User log: $userlog			
+#Network: IP $(hostname -I) $mac
+#Sudo: $sudo
+"

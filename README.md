@@ -13,7 +13,7 @@ https://debian-handbook.info/browse/stable/sect.selinux.html
 
 # AppArmor
 For debian.
-AppArmor provides **Mandatory Access Control (MAC) security**. In fact, **AppAmor allows the system administrator to restrict the actions that processes can perform**. For example, if an installed application can take photos by accessing the camera application, but the administrator denies this privilege, the application will not be able to access the camera application.j  If a vulnerability occurs (some of the restricted tasks are performed), AppArmor blocks the application  so that the damage does not spread to the rest of the system.<br>
+AppArmor provides **Mandatory Access Control (MAC) security**. In fact, **AppAmor allows the system administrator to restrict the actions that processes can perform**.
 
 https://debian-handbook.info/browse/stable/sect.apparmor.html
 https://wiki.debian.org/AppArmor/HowToUse
@@ -33,7 +33,6 @@ https://wiki.debian.org/AppArmor/HowToUse
 In Debian-based OS distributions, the default package manager we can use is **dpkg**. This tool allows us to install, remove and manage programs on our operating system. However, in most cases, these programs come with a list of dependencies that must be installed for the main program to function properly.
 
 **APT (Advanced Package Tool)**, which is a tool that uses dpkg, can be used to install all the necessary dependencies when installing a program.  
-
 **Aptitude** a graphical interface packege tool.
  
 https://wiki.debian.org/Aptitude
@@ -176,7 +175,7 @@ Authentication using sudo has to be limited to 3 attempts in the event of an inc
 
 A custom message of your choice has to be displayed if an error due to a wrong password occurs when using sudo.
 
-	#Defaults       badpass_message=="Password is wrong, remember it, idiot!!!!"
+	#Defaults       badpass_message=="Password is wrong, try it again!"
 	Defaults        insults
 
 Each action using sudo has to be archived, both inputs and outputs (Log sudo commands). The log file has to be saved in the/var/log/sudo/folder. 
@@ -195,40 +194,19 @@ Example:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 	Defaults   secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
 
 
-
 # Monitoring.sh
 At server startup, the script will display some information on all terminals every 10 minutes. Schedule the task with cron and send masage with wall.
 
-	# The architecture of your operating system and its kernel version.
-		arch
-		uname -r
+	
+	# Cpu load needed to install (mpstat).
+	sudo apt-get install sysstat
+	# Or this
+	cat /proc/cpuinfo or cat /proc/stat
 
-
-	# The number of physical processors.
-		lscpu 
-
-	# The number of virtual processors.
-		
-
-•The current available RAM on your server and its utilization rate as a percentage.
-
-•The current available memory on your server and its utilization rate as a percentage.
-
-•The current utilization rate of your processors as a percentage.
-
-•The date and time of the last reboot.
-
-•Whether LVM is active or not.
-
-•The number of active connections.
-
-•The number of users using the server.
-
-•The IPv4 address of your server and its MAC (Media Access Control) address.
-
-•The number of commands executed with thesudoprogra
-
-
+	# Net tools.
+	sudo apt install net-tools
+	# or use the command
+	ss -s (nothing to install)
 
 
 # More commands
@@ -248,33 +226,8 @@ Once we know a little more about how to build a server inside a Virtual Machine 
 - **Wall:** command used by the root user to send a message to all users currently connected to the server. If the system administrator wants to alert about a major server change that could cause users to log out, the root user could alert them with wall. 
 
 # References
-- https://www.youtube.com/watch?v=2w-2MX5QrQw 				[install debian]
-  
-- https://githubmemory.com/repo/hanshazairi/42-born2beroot	[reading OK]
+- https://www.youtube.com/watch?v=2w-2MX5QrQw 				[install debian]  
+- https://githubmemory.com/repo/hanshazairi/42-born2beroot
 - https://baigal.medium.com/born2beroot-e6e26dfb50ac
-
-- https://github.com/HEADLIGHTER/Born2BeRoot-42				[good]
-
-- https://github.com/pgomez-a/born2beroot					[info]
-
-- https://baigal.medium.com/born2beroot-e6e26dfb50ac		[super]
-
-
-
-# Tom script
-
-#!/bin/bash
-wall << FILE
-#Architecture: $(uname -a)
-#CPU physical: $(nproc)
-#vCPU: $(cat /proc/cpuinfo | grep processor | wc -l)
-$(free | grep Mem | awk '{printf"#Memory Usage: %.0f/%.0fMB (%.2f%%)\n", $3 / 1000, $2 / 1000, $3/$2 * 100.0}')
-$(df | grep dev/sda1 | awk '{printf"#Disk Usage: %.0f/%.0fMB (%.2f%%)\n", $3 / 1000, $2 / 1000, $3/$2 * 100}')
-$(mpstat | grep -A 5 "%idle" | tail -n 1 | awk '{printf"#CPU Load: %.2f%%\n", 100 - $13}')
-#Last boot: $(who -b | cut -d' ' -f13) $(who -b | cut -d' ' -f14)
-#LVM use: $(lsblk | grep lvm | wc -l | awk '{print ($0 > 0)?"yes":"no"}')
-#Connexions TCP: $(ss -s | grep estab | awk '{print $4}') ESTABLISHED
-#User Log: $(who | cut -d " " -f 1 | sort -u | wc -l)
-#Network: $(ip -4 addr | grep global -m 1 | awk '{print $2}') ($(ip addr | grep link/ether -m 1 | awk '{print $2}'))
-#Sudo: $(cat /var/log/sudo/sudo.log | awk 'NR == 1 || NR % 2 == 1' | wc -l) cmd
-FILE
+- https://github.com/HEADLIGHTER/Born2BeRoot-42
+- https://baigal.medium.com/born2beroot-e6e26dfb50ac
