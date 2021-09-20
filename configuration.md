@@ -24,7 +24,6 @@ https://www.youtube.com/watch?v=2w-2MX5QrQw
 
 	lsblk
 
-
 # Sudo, Su, adduser and groupadd
 
 	apt-get install sudo
@@ -56,8 +55,6 @@ Create an USER and add in the sudo group
 	getent passwd <username>	[Checking]
 	chage -l <username>			[Info about passwd]
 
-
-
 # SSH (Secure Shell) and UFW (Uncomplicated Firewall)
 
 	apt-get install openssh-server
@@ -79,6 +76,11 @@ Config the ssh-server-file sshd_config, add the port 4242 and disable ssh login 
 	ufw delete <number>	[Delete ports 22]
 
 # Password Policy
+Need to edit this files:
+
+	/etc/login.defs
+	/etc/pam.d/common-password
+	/etc/sudoers [sudo visudo]
 
 ## /etc/login.defs
 
@@ -91,17 +93,16 @@ Config the ssh-server-file sshd_config, add the port 4242 and disable ssh login 
 	# The user has to receive a warning message 7 days before their password expires
 	PASS_WARN_AGE   7
 
-
 Checking the changes in the user
 	
 	chage -l <username>
 
 ## /etc/pam.d/common-password
 **PAM** module to check password strength
-Your password must be at least 10 characters long. It must contain an uppercaseletter and a number. It must not contain more than 3 consecutive identical characters. The password must not include the name of the user. 
+Your password must be at least 10 characters long. It must contain an uppercase letter and a number. It must not contain more than 3 consecutive identical characters. The password must not include the name of the user. 
 
 The following rule does not apply to the root password: The password must have at least 7 characters that are not part of the former password.
-Of course, your root password has to comply with this polic
+Of course, your root password has to comply with this policy
 
 	apt-get update -y
 	apt-get install -y libpam-pwquality
@@ -143,7 +144,7 @@ File to edit /etc/pam.d/common-password and add.
 	passwd			[Change passwd for actual user]
 	sudo passwd		[Change pass for root]
 
-To update the passwd policy in the users that are already in the system, it must be changed manually by the admin.
+To update the passwd-policy in the users that are already in the system, it must be changed manually by the admin.
 
 	# Check the passwd status
 	chage -l <username>
@@ -151,7 +152,7 @@ To update the passwd policy in the users that are already in the system, it must
 	# Password has to expire every 30 days
 	sudo chage -M <days> <username>
 	
-	# The minimum number of days allowed before the modification of a password willbe set to 2
+	# The minimum number of days allowed before the modification of a password will be set to 2
 	sudo chage -m <days> <username>
 
 	# The user has to receive a warning message 7 days before their password expires
@@ -182,9 +183,8 @@ Example:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
 	Defaults   secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
 
-
 # Monitoring.sh
-At server startup, the script will display some information on all terminals every 10 minutes. Schedule the task with cron and send masage with wall.
+At server startup, the script will display some information on all terminals every 10 minutes. Schedule the task with cron and send massage with wall.
 See the monitoring.sh script.
 	
 	# Cpu load needed to install (mpstat).
@@ -206,6 +206,12 @@ See the monitoring.sh script.
 
 	sudo service cron status
 
+Stop the script without edit the cron file:
+
+	ps aux | grep cron 		[Find the pid from cron task]
+	kill -l 				[Find the right sign, 19=SIGSTOP]
+	kill -19 <pid>			[Send the stop sign to cron to stop the monitoring script]
+
 
 # More commands
 
@@ -218,8 +224,3 @@ See the monitoring.sh script.
 	
 	service sudo restart
 	service ssh restart		[Check for the status of the service or restart, equal]
-
-	ps aux | grep cron 		[Find the pid from cron]
-	kill -l 				[Find the right sign]
-	kill -19 <pid>			[Send the stop sign to cron to stop the monitoring script]
-
