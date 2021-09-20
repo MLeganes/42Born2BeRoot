@@ -75,7 +75,8 @@ Config the ssh-server-file sshd_config, add the port 4242 and disable ssh login 
 	ufw allow 4242
 	ufw enable
 	ufw status
-
+	ufw status numbered
+	ufw delete <number>	[Delete ports 22]
 
 # Password Policy
 
@@ -217,4 +218,8 @@ See the monitoring.sh script.
 	
 	service sudo restart
 	service ssh restart		[Check for the status of the service or restart, equal]
+
+	ps aux | grep cron 		[Find the pid from cron]
+	kill -l 				[Find the right sign]
+	kill -19 <pid>			[Send the stop sign to cron to stop the monitoring script]
 

@@ -77,9 +77,15 @@ LVM (Logical Volume Manager)
 At server startup, the script will display some information on all terminals every 10 minutes. Schedule the task with cron and send masage with wall.
 See the monitoring.sh script.
 
-	/etc/
+	/etc/monitoring.sh
 
 # Cron and wall
 Once we know a little more about how to build a server inside a Virtual Machine (remember that you also have to look in other pages apart from this README), we will see two commands that will be very helpful in case of being system administrators. These commands are:
 - **Cron:** Linux task manager that allows us to execute commands at a certain time. We can automate some tasks just by telling cron what command we want to run at a specific time. For example, if we want to restart our server every day at 4:00 am, instead of having to wake up at that time, cron will do it for us.
 - **Wall:** command used by the root user to send a message to all users currently connected to the server. If the system administrator wants to alert about a major server change that could cause users to log out, the root user could alert them with wall. 
+
+Stop the monitoring script without change the crontab file:
+
+	ps aux | grep cron 		[Find the pid from cron]
+	kill -19 <pid>			[Send the stop sign to cron to stop the monitoring script]
+
