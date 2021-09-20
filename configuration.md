@@ -76,6 +76,7 @@ Config the ssh-server-file sshd_config, add the port 4242 and disable ssh login 
 	ufw enable
 	ufw status
 
+
 # Password Policy
 
 ## /etc/login.defs
@@ -88,6 +89,11 @@ Config the ssh-server-file sshd_config, add the port 4242 and disable ssh login 
 
 	# The user has to receive a warning message 7 days before their password expires
 	PASS_WARN_AGE   7
+
+
+Checking the changes in the user
+	
+	chage -l <username>
 
 ## /etc/pam.d/common-password
 **PAM** module to check password strength
@@ -127,7 +133,7 @@ File to edit /etc/pam.d/common-password and add.
 	#implement the same policy on root
 	enforce_for_root
 
-**should look like the below:**
+**should looks like:**
 
 	password	requisite	pam_pwquality.so retry=3 minlen=10 ucredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root
 
@@ -135,6 +141,20 @@ File to edit /etc/pam.d/common-password and add.
 
 	passwd			[Change passwd for actual user]
 	sudo passwd		[Change pass for root]
+
+To update the passwd policy in the users that are already in the system, it must be changed manually by the admin.
+
+	# Check the passwd status
+	chage -l <username>
+	
+	# Password has to expire every 30 days
+	sudo chage -M <days> <username>
+	
+	# The minimum number of days allowed before the modification of a password willbe set to 2
+	sudo chage -m <days> <username>
+
+	# The user has to receive a warning message 7 days before their password expires
+	sudo chage -W <days> <username>
 
 
 # Sudo Stricts Rules #visudo to edit **/etc/sudoers**
@@ -186,12 +206,12 @@ See the monitoring.sh script.
 	sudo service cron status
 
 
-# Randon commands
+# More commands
 
 	id <username>			[Print info about the user]
 	id -nG <username>
 	ip address				[Ip address]	
-	dpkg -l | grep ssh		[Check if the package is really installed]
+	dpkg -l | grep ssh		[Check if the package is installed]
 	
 	systemctl status ssh	[Check for the status of the service or restart]
 	
